@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.9] - 2025-05-12
+### Added
+- Version synchronization across CLI and SDKs
+
+
+
 All notable changes to the Vaultarq project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
