@@ -102,7 +102,7 @@ curl -fsSL https://raw.githubusercontent.com/Vaultarq/vaultarq/main/docker-insta
 ### Docker Installation
 
 ```bash
-docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" softcysec/vaultarq:latest init
+docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" ghcr.io/vaultarq/cli:latest init
 ```
 
 ### Manual Installation

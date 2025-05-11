@@ -42,12 +42,31 @@ if [ -t 0 ]; then
     TTY_ARG="-it"
 fi
 
+# Primary image from GitHub Packages
+PRIMARY_IMAGE="ghcr.io/vaultarq/cli:latest"
+# Fallback image from Docker Hub
+FALLBACK_IMAGE="softcysec/vaultarq:latest"
+
+# Try to pull the primary image first
+if ! docker pull $PRIMARY_IMAGE &>/dev/null; then
+    echo "Unable to pull from GitHub Packages, falling back to Docker Hub..."
+    if ! docker pull $FALLBACK_IMAGE &>/dev/null; then
+        echo "Error: Unable to pull VaultARQ image from any source."
+        exit 1
+    fi
+    # Use fallback image
+    VAULTARQ_IMAGE=$FALLBACK_IMAGE
+else
+    # Use primary image
+    VAULTARQ_IMAGE=$PRIMARY_IMAGE
+fi
+
 # Map the home directory to allow access to the vault
 docker run --rm $TTY_ARG \
     -v "${HOME}/.vaultarq:/root/.vaultarq" \
     -v "${PWD}:/workdir" \
     -w /workdir \
-    softcysec/vaultarq:latest "$@"
+    $VAULTARQ_IMAGE "$@"
 EOF
 
 # Make wrapper executable

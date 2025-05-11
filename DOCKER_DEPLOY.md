@@ -25,11 +25,12 @@ This method:
 - Creates a wrapper script that uses Docker behind the scenes
 - Mounts the necessary directories for persistent storage
 - Handles all Docker command complexity for users
+- Automatically selects the best image source (GitHub Packages or Docker Hub)
 
 ### 2. Direct Docker Usage
 
 ```bash
-docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" -v "${PWD}:/workdir" -w /workdir softcysec/vaultarq:latest <command>
+docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" -v "${PWD}:/workdir" -w /workdir ghcr.io/vaultarq/cli:latest <command>
 ```
 
 ### 3. Manual Installation
@@ -47,7 +48,7 @@ cd vaultarq
 The project uses a GitHub Actions workflow for CI/CD:
 
 1. **Synchronization Check**: Ensures CLI and SDKs are in sync
-2. **Docker Image Building**: Creates and publishes Docker images to Docker Hub
+2. **Docker Image Building**: Creates and publishes Docker images to both GitHub Packages and Docker Hub
 3. **Installation Script Deployment**: Updates the installation script
 4. **README Updates**: Keeps README installation instructions current
 
@@ -93,17 +94,26 @@ When developing Vaultarq:
 ```
 ┌────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │                │     │                 │     │                 │
-│  GitHub Repo   │────▶│  GitHub Actions │────▶│  Docker Hub     │
+│  GitHub Repo   │────▶│  GitHub Actions │────▶│  GitHub Packages │
 │                │     │                 │     │                 │
 └────────────────┘     └─────────────────┘     └────────┬────────┘
                                                         │
                                                         ▼
-┌────────────────┐     ┌─────────────────┐
-│                │     │                 │
-│  User Machine  │◀────│  GitHub Raw URL │
-│                │     │                 │
-└────────────────┘     └─────────────────┘
+┌────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│                │     │                 │     │                 │
+│  User Machine  │◀────│  GitHub Raw URL │◀────│  Docker Hub     │
+│                │     │                 │     │ (Fallback)      │
+└────────────────┘     └─────────────────┘     └─────────────────┘
 ```
+
+## Image Sources
+
+VaultARQ's Docker images are published to:
+
+1. **GitHub Packages (Primary)**: `ghcr.io/vaultarq/cli:latest`
+2. **Docker Hub (Fallback)**: `softcysec/vaultarq:latest`
+
+The installation script automatically tries GitHub Packages first and falls back to Docker Hub if needed.
 
 ## Troubleshooting
 
@@ -112,4 +122,4 @@ If you encounter issues with the Docker-based installation:
 1. Ensure Docker is installed and running
 2. Check if the user has permissions to run Docker commands
 3. Verify that the necessary volumes are being mounted correctly
-4. Ensure network connectivity to access the Docker registry 
+4. Ensure network connectivity to access the container registries 
