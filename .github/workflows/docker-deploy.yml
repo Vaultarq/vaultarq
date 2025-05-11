@@ -48,7 +48,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: vaultarq/cli
+          images: softcysec/vaultarq
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -112,7 +112,7 @@ jobs:
       - name: Update README
         run: |
           # Update installation instructions in README.md
-          sed -i 's|ghcr.io/vaultarq/vaultarq:latest|vaultarq/cli:latest|g' README.md
+          sed -i 's|vaultarq/cli:latest|softcysec/vaultarq:latest|g' README.md
           
           # Update version number references in README.md
           sed -i "s/v[0-9]\+\.[0-9]\+\.[0-9]\+/v$VERSION/g" README.md

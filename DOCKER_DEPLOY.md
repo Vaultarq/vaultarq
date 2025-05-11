@@ -29,7 +29,7 @@ This method:
 ### 2. Direct Docker Usage
 
 ```bash
-docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" -v "${PWD}:/workdir" -w /workdir vaultarq/cli:latest <command>
+docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" -v "${PWD}:/workdir" -w /workdir softcysec/vaultarq:latest <command>
 ```
 
 ### 3. Manual Installation
