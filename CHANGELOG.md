@@ -5,6 +5,12 @@ All notable changes to the Vaultarq project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8] - 2025-05-11
+
+### Fixed
+- Fixed GitHub Release creation by adding proper permissions to the workflow
+- Updated release creation action to use softprops/action-gh-release
+
 ## [0.1.7] - 2025-05-11
 
 ### Added
