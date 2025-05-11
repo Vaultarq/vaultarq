@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.10] - 2025-05-12
+### Added
+- Docker-based CLI distribution system
+- Support for GitHub Packages and Docker Hub distribution
+- Improved installation script with registry fallbacks
+- Synchronized versioning across CLI and all SDK components
+
+### Fixed
+- Release workflow issues with cargo publish
+- Installation script reliability improvements
+- Proper version tagging in all components
+
 ## [0.1.9] - 2025-05-12
 ### Added
 - Version synchronization across CLI and SDKs
