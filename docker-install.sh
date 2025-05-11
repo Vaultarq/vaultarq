@@ -47,7 +47,7 @@ docker run --rm $TTY_ARG \
     -v "${HOME}/.vaultarq:/root/.vaultarq" \
     -v "${PWD}:/workdir" \
     -w /workdir \
-    ghcr.io/vaultarq/vaultarq:latest "$@"
+    vaultarq/cli:latest "$@"
 EOF
 
 # Make wrapper executable

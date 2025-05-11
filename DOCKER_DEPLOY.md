@@ -29,7 +29,7 @@ This method:
 ### 2. Direct Docker Usage
 
 ```bash
-docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" -v "${PWD}:/workdir" -w /workdir ghcr.io/vaultarq/vaultarq:latest <command>
+docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" -v "${PWD}:/workdir" -w /workdir vaultarq/cli:latest <command>
 ```
 
 ### 3. Manual Installation
@@ -47,7 +47,7 @@ cd vaultarq
 The project uses a GitHub Actions workflow for CI/CD:
 
 1. **Synchronization Check**: Ensures CLI and SDKs are in sync
-2. **Docker Image Building**: Creates and publishes Docker images to GitHub Container Registry
+2. **Docker Image Building**: Creates and publishes Docker images to Docker Hub
 3. **Installation Script Deployment**: Updates the installation script
 4. **README Updates**: Keeps README installation instructions current
 
@@ -93,7 +93,7 @@ When developing Vaultarq:
 ```
 ┌────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │                │     │                 │     │                 │
-│  GitHub Repo   │────▶│  GitHub Actions │────▶│  Docker Image   │
+│  GitHub Repo   │────▶│  GitHub Actions │────▶│  Docker Hub     │
 │                │     │                 │     │                 │
 └────────────────┘     └─────────────────┘     └────────┬────────┘
                                                         │
