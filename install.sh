@@ -31,7 +31,7 @@ else
     exit 1
   fi
   
-  git clone https://github.com/yourname/vaultarq.git "$TEMP_DIR/vaultarq"
+  git clone https://github.com/Vaultarq/vaultarq.git "$TEMP_DIR/vaultarq"
   VAULTARQ_SRC="$TEMP_DIR/vaultarq"
 fi
 

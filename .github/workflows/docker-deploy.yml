@@ -1,0 +1,130 @@
+name: Docker Deployment
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*.*.*' ]
+  workflow_dispatch:
+
+jobs:
+  check-sync:
+    name: Check CLI-SDK Synchronization
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Install CLI dependencies
+        run: |
+          cd core
+          npm install
+      - name: Run synchronization check
+        run: ./sync_check.sh
+      - name: Fail if synchronization issues
+        if: ${{ failure() }}
+        run: |
+          echo "::error::CLI and SDKs are not properly synchronized. Please run ./update_versions.sh and commit changes."
+          exit 1
+
+  build-and-publish-docker:
+    name: Build and Publish Docker Image
+    needs: check-sync
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/vaultarq/vaultarq
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=short
+            latest
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  update-install-script:
+    name: Update Installation Script
+    needs: build-and-publish-docker
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Upload docker-install.sh as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: install-script
+          path: docker-install.sh
+      
+      - name: Commit installation script to the repo
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Update the version in the script if needed
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          
+          # Commit changes if needed
+          git add docker-install.sh
+          git commit -m "Update installation script for v$VERSION [skip ci]" || echo "No changes to commit"
+          git push
+
+  update-README:
+    name: Update README Installation Instructions
+    needs: update-install-script
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Extract version
+        id: extract_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+      
+      - name: Update README
+        run: |
+          # Update installation instructions in README.md
+          sed -i 's|curl -fsSL https://raw.githubusercontent.com/okware/vaultarq/main/docker-install.sh|curl -fsSL https://raw.githubusercontent.com/Vaultarq/vaultarq/main/docker-install.sh|g' README.md
+          
+          # Update version number references in README.md
+          sed -i "s/v[0-9]\+\.[0-9]\+\.[0-9]\+/v$VERSION/g" README.md
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          git commit -m "Update installation instructions for v$VERSION [skip ci]" || echo "No changes to commit"
+          git push 

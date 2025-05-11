@@ -14,18 +14,95 @@ Vaultarq allows developers to store secrets once and access them instantly in an
 - **Secure by default**: No secrets in plain text, only encrypted at rest
 - **Multi-language SDKs**: Native integration for Node.js, Python, Rust, and Go
 
+## CLI and SDK Synchronization
+
+Vaultarq consists of both a CLI tool and language-specific SDKs for Rust, Node.js, Python, and Go. These components work together to provide a seamless secrets management experience.
+
+### How It Works
+
+The CLI tool manages the vault creation, secret storage, and environment switching. The SDKs integrate with your applications to read secrets from the vault created by the CLI.
+
+### Checking Synchronization
+
+To ensure all components are working together properly, run:
+
+```bash
+./sync_check.sh
+```
+
+This script verifies that:
+- The CLI is properly installed
+- All SDKs have compatible vault formats
+- Versions are synchronized across components
+- SDKs can detect and interact with the CLI
+
+### Updating Versions
+
+When releasing a new version, you can use the version updater to maintain consistency:
+
+```bash
+./update_versions.sh 0.2.0  # Replace with your version
+```
+
+This script updates version numbers across all components:
+- CLI tool
+- Rust SDK
+- Node.js SDK
+- Python SDK
+- Go SDK
+- CHANGELOG.md
+
+### SDK Usage
+
+Each SDK provides a consistent API for interacting with Vaultarq:
+
+```rust
+// Rust
+if vaultarq::is_available() {
+    vaultarq::init()?;
+}
+```
+
+```javascript
+// Node.js
+if (vaultarq.isAvailable()) {
+    await vaultarq.init();
+}
+```
+
+```python
+# Python
+if vaultarq.is_available():
+    vaultarq.init()
+```
+
+```go
+// Go
+if vaultarq.IsAvailable() {
+    vaultarq.Init()
+}
+```
+
+For more information, see [CLI_SDK_SYNC.md](./CLI_SDK_SYNC.md).
+
 ## Installation
 
 ### Quick Install (recommended)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Vaultarq/vaultarq/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Vaultarq/vaultarq/main/docker-install.sh | bash
 ```
 
 This installs Vaultarq to `~/.local/bin/vaultarq` by default. You can specify a different install location:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Vaultarq/vaultarq/main/install.sh | bash -s -- /usr/local/bin
+curl -fsSL https://raw.githubusercontent.com/Vaultarq/vaultarq/main/docker-install.sh | bash -s -- /usr/local/bin
+```
+
+### Docker Installation
+
+```bash
+docker run --rm -v "${HOME}/.vaultarq:/root/.vaultarq" ghcr.io/vaultarq/vaultarq:latest init
 ```
 
 ### Manual Installation

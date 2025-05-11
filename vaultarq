@@ -2,10 +2,14 @@
 
 set -e
 
+# Version information
+VERSION="0.1.8"
+
 # Get the directory of the vaultarq script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASH_DIR="${SCRIPT_DIR}/bash"
 CONFIG_FILE="${HOME}/.vaultarq/config"
+SDKS_DIR="${SCRIPT_DIR}/sdks"
 
 # Display usage info
 function show_help {
@@ -22,6 +26,8 @@ function show_help {
   echo "  link ENV      Set active environment (dev/prod/etc.)"
   echo "  list          List secrets in vault"
   echo "  open          Show vault path or current env info"
+  echo "  version       Show version information"
+  echo "  sdk-check     Check SDK synchronization"
   echo ""
   echo "Examples:"
   echo "  vaultarq init"
@@ -32,6 +38,20 @@ function show_help {
   exit 0
 }
 
+# Check SDK synchronization
+function check_sdks {
+  echo "Checking SDK synchronization..."
+  
+  # Run the sync_check.sh script if available
+  if [ -f "${SCRIPT_DIR}/sync_check.sh" ]; then
+    bash "${SCRIPT_DIR}/sync_check.sh"
+  else
+    echo "Error: sync_check.sh not found"
+    echo "Run this command from the main Vaultarq directory"
+    exit 1
+  fi
+}
+
 # Check if command exists
 if [ $# -eq 0 ]; then
   show_help
@@ -39,6 +59,18 @@ fi
 
 COMMAND=$1
 shift
+
+# Handle built-in commands
+case $COMMAND in
+  version)
+    echo "Vaultarq CLI v$VERSION"
+    exit 0
+    ;;
+  sdk-check)
+    check_sdks
+    exit 0
+    ;;
+esac
 
 # Check if the command script exists
 COMMAND_SCRIPT="${BASH_DIR}/${COMMAND}.sh"
