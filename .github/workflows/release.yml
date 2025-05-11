@@ -61,6 +61,11 @@ jobs:
         working-directory: sdks/rust-sdk
     steps:
       - uses: actions/checkout@v3
+      # Add git config for potential commits
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -70,8 +75,15 @@ jobs:
         run: cargo install cargo-edit
       - name: Login to crates.io
         run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
-      - name: Publish to crates.io
-        run: cargo publish
+      - name: Publish to crates.io with allow-dirty flag
+        run: cargo publish --allow-dirty
+      - name: Commit Cargo.lock changes if needed
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "Update Cargo.lock after publishing to crates.io [skip ci]" || echo "No changes to commit"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
+          fi
 
   create-release:
     name: Create GitHub Release

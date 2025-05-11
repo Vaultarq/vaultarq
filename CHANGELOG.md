@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.11] - 2025-05-12
+### Added
+- Automated handling of uncommitted changes in Rust SDK publishing
+- Improved GitHub Actions workflow for more reliable releases
+
+### Fixed
+- Resolved `--allow-dirty` flag issue in Rust SDK publishing process
+- Added automatic commit and push of Cargo.lock changes after publishing
+- Improved CI/CD pipeline reliability for all SDKs
+
 ## [0.1.10] - 2025-05-12
 ### Added
 - Docker-based CLI distribution system

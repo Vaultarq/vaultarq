@@ -1,6 +1,6 @@
 [package]
 name = "vaultarq"
-version = "0.1.10"
+version = "0.1.11"
 edition = "2021"
 authors = ["Dedan Okware <softengdedan@gmail.com>"]
 description = "Rust SDK for Vaultarq - The developer-first, invisible secrets manager"
