@@ -1,5 +1,6 @@
 name: Release SDKs
 
+# Workflow to publish SDKs to various package registries when a new version tag is pushed
 on:
   push:
     tags:
