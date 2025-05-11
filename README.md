@@ -119,8 +119,13 @@ Vaultarq provides official SDKs for multiple programming languages, making it ea
 
 ### Node.js SDK
 
+```bash
+# Install from npm
+npm install @vaultarq/node
+```
+
 ```javascript
-// npm install @vaultarq/node
+// Use in your code
 import vaultarq from '@vaultarq/node';
 
 // Load secrets into process.env
@@ -132,8 +137,13 @@ console.log(process.env.API_KEY);
 
 ### Python SDK
 
+```bash
+# Install from PyPI
+pip install vaultarq
+```
+
 ```python
-# pip install vaultarq
+# Use in your code
 from vaultarq import load_env
 
 # Load secrets into os.environ
@@ -146,8 +156,14 @@ print(os.environ["API_KEY"])
 
 ### Rust SDK
 
+```toml
+# Add to your Cargo.toml
+[dependencies]
+vaultarq = "0.1.0"
+```
+
 ```rust
-// Cargo.toml: vaultarq = "0.1.0"
+// Use in your code
 use vaultarq::init;
 
 fn main() {
@@ -161,15 +177,20 @@ fn main() {
 
 ### Go SDK
 
+```bash
+# Add to your project
+go get github.com/Vaultarq/go
+```
+
 ```go
-// go get github.com/vaultarq/go
+// Use in your code
 package main
 
 import (
     "fmt"
     "os"
     
-    "github.com/vaultarq/go"
+    "github.com/Vaultarq/go"
 )
 
 func main() {
