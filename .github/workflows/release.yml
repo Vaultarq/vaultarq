@@ -77,6 +77,8 @@ jobs:
     name: Create GitHub Release
     needs: [release-node, release-python, release-rust]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - name: Extract version
@@ -107,19 +109,14 @@ jobs:
             - **Rust**: Add \`vaultarq = \"$VERSION\"\` to your \`Cargo.toml\`
             - **Go**: \`go get github.com/Vaultarq/vaultarq/sdks/go-sdk@v$VERSION\`"
           fi
-          
-          # Convert to single line with newline escapes for GitHub Actions
-          RELEASE_NOTES="${RELEASE_NOTES//'%'/'%25'}"
-          RELEASE_NOTES="${RELEASE_NOTES//$'\n'/'%0A'}"
-          RELEASE_NOTES="${RELEASE_NOTES//$'\r'/'%0D'}"
-          echo "NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: ${{ env.NOTES }}
           draft: false
-          prerelease: false
-          body: ${{ env.NOTES }} 
+          prerelease: false 
