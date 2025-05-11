@@ -100,7 +100,7 @@ jobs:
             
             ## Available Packages
             
-            - **Node.js**: \`npm install @vaultarq/node@$VERSION\`
+            - **Node.js**: \`npm install vaultarq-node@$VERSION\`
             - **Python**: \`pip install vaultarq==$VERSION\`
             - **Rust**: Add \`vaultarq = \"$VERSION\"\` to your \`Cargo.toml\`
             - **Go**: \`go get github.com/Vaultarq/vaultarq/sdks/go-sdk@v$VERSION\`"

@@ -8,3 +8,12 @@ RELEASE_NOTES.md
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Node modules
+node_modules/
+package-lock.json
+
+dist/
+vaultarq.egg-info/
+
+target/
