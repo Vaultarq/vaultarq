@@ -87,25 +87,27 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Upload docker-install.sh as artifact
-        uses: actions/upload-artifact@v3
         with:
-          name: install-script
-          path: docker-install.sh
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Commit installation script to the repo
+      # Update version in the script
+      - name: Update installation script
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "Updating installation script for version $VERSION"
+          
+          # Update the image reference to use GitHub Packages
+          sed -i 's|softcysec/vaultarq:latest|ghcr.io/vaultarq/cli:latest|g' docker-install.sh
+      
+      # Commit and push changes directly instead of using artifacts
+      - name: Commit installation script changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Update the version in the script if needed
           VERSION="${GITHUB_REF#refs/tags/v}"
           
-          # Update script to use GitHub Packages image
-          sed -i 's|softcysec/vaultarq:latest|ghcr.io/vaultarq/cli:latest|g' docker-install.sh
-          
-          # Commit changes if needed
           git add docker-install.sh
           git commit -m "Update installation script for v$VERSION [skip ci]" || echo "No changes to commit"
           git push
@@ -119,6 +121,9 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Extract version
         id: extract_version
