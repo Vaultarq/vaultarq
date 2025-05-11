@@ -1,0 +1,52 @@
+#!/bin/bash
+
+set -e
+
+# Get the directory of the vaultarq script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASH_DIR="${SCRIPT_DIR}/bash"
+CONFIG_FILE="${HOME}/.vaultarq/config"
+
+# Display usage info
+function show_help {
+  echo "Vaultarq - Developer-first, invisible secrets manager"
+  echo ""
+  echo "Usage:"
+  echo "  vaultarq <command> [options]"
+  echo ""
+  echo "Commands:"
+  echo "  init          Create a new encrypted vault"
+  echo "  push KEY=VAL  Add/update secrets to the vault"
+  echo "  pull          Load secrets into current shell"
+  echo "  export        Output secrets as export statements"
+  echo "  link ENV      Set active environment (dev/prod/etc.)"
+  echo "  list          List secrets in vault"
+  echo "  open          Show vault path or current env info"
+  echo ""
+  echo "Examples:"
+  echo "  vaultarq init"
+  echo "  vaultarq push STRIPE_KEY=sk_test_abc123"
+  echo "  vaultarq pull"
+  echo "  eval \"\$(vaultarq export --bash)\""
+  echo ""
+  exit 0
+}
+
+# Check if command exists
+if [ $# -eq 0 ]; then
+  show_help
+fi
+
+COMMAND=$1
+shift
+
+# Check if the command script exists
+COMMAND_SCRIPT="${BASH_DIR}/${COMMAND}.sh"
+if [ ! -f "$COMMAND_SCRIPT" ]; then
+  echo "Error: Unknown command '$COMMAND'"
+  echo "Run 'vaultarq' for usage information"
+  exit 1
+fi
+
+# Execute the command script with remaining arguments
+exec "${COMMAND_SCRIPT}" "$@" 

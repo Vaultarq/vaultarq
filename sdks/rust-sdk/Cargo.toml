@@ -1,0 +1,18 @@
+[package]
+name = "vaultarq"
+version = "0.1.0"
+edition = "2021"
+authors = ["Dedan Okware <softengdedan@gmail.com>"]
+description = "Rust SDK for Vaultarq - The developer-first, invisible secrets manager"
+documentation = "https://github.com/Vaultarq/vaultarq"
+homepage = "https://github.com/Vaultarq/vaultarq"
+repository = "https://github.com/Vaultarq/vaultarq"
+license = "MIT"
+keywords = ["secrets", "environment", "env", "security"]
+categories = ["authentication", "config"]
+readme = "README.md"
+
+[dependencies]
+thiserror = "1.0"
+regex = "1.7"
+which = "4.4"

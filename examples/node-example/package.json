@@ -1,0 +1,13 @@
+{
+  "name": "vaultarq-node-example",
+  "version": "1.0.0",
+  "description": "Example application using Vaultarq Node.js SDK",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@vaultarq/node": "^0.1.0"
+  },
+  "private": true
+} 

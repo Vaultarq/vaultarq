@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  vaultarq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - vaultarq_data:/root/.vaultarq
+    stdin_open: true  # Keep STDIN open
+    tty: true         # Allocate a pseudo-TTY
+    # Command can be overridden on run:
+    # docker-compose run vaultarq init
+    # docker-compose run vaultarq push API_KEY=mysecret
+
+  # Example app service using Vaultarq
+  example:
+    image: node:18-slim
+    depends_on:
+      - vaultarq
+    # This example runs a Node.js application with secrets from Vaultarq
+    command: >
+      sh -c "
+        # Install Vaultarq Node SDK
+        npm install @vaultarq/node &&
+        # Create a simple test script
+        echo 'const vaultarq = require(\"@vaultarq/node\").default;
+        
+        async function main() {
+          await vaultarq.load();
+          console.log(\"API_KEY:\", process.env.API_KEY || \"Not set\");
+        }
+        
+        main().catch(console.error);' > app.js &&
+        # Run the application
+        node app.js
+      "
+    environment:
+      - VAULTARQ_BIN_PATH=/vaultarq
+    volumes:
+      - vaultarq_data:/root/.vaultarq
+      - ./bin/vaultarq:/vaultarq
+
+volumes:
+  vaultarq_data:
+    # Persistent volume for storing encrypted vault data 

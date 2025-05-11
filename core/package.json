@@ -1,0 +1,10 @@
+{
+  "name": "vaultarq-core",
+  "version": "1.0.0",
+  "description": "Core encryption/decryption utilities for Vaultarq",
+  "private": true,
+  "dependencies": {
+    "argon2": "^0.31.0",
+    "crypto": "^1.0.1"
+  }
+} 

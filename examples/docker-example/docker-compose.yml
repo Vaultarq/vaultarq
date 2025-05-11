@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../bin/vaultarq:/vaultarq
+      - vaultarq_data:/root/.vaultarq
+    environment:
+      - VAULTARQ_BIN_PATH=/vaultarq
+    depends_on:
+      - vaultarq-setup
+
+  # This service is just used to initialize the vault
+  vaultarq-setup:
+    image: busybox
+    volumes:
+      - ../../bin/vaultarq:/vaultarq
+      - vaultarq_data:/root/.vaultarq
+    command: echo "Vaultarq data volume mounted"
+
+volumes:
+  vaultarq_data:
+    external: true 
